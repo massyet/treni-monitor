@@ -1,0 +1,11 @@
+{
+  "soglia_ritardo_min": 5,
+  "step_riavviso_min": 10,
+  "finestra_minuti": 75,
+  "tratte": [
+    { "da": "MARINO LAZIALE", "a": "ROMA TERMINI",   "etichetta": "Marino → Roma Termini" },
+    { "da": "ROMA TERMINI",   "a": "MARINO LAZIALE", "etichetta": "Roma Termini → Marino" },
+    { "da": "ROMA TERMINI",   "a": "CIAMPINO",       "etichetta": "Roma Termini → Ciampino" },
+    { "da": "ROMA TERMINI",   "a": "CASABIANCA",     "etichetta": "Roma Termini → Casabianca" }
+  ]
+}
