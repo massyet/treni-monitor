@@ -30,7 +30,14 @@ except Exception:  # fallback estremo
 import requests
 
 BASE = "http://www.viaggiatreno.it/infomobilita/resteasy/viaggiatreno"
-HEADERS = {"User-Agent": "Mozilla/5.0 (treni-monitor; +https://github.com)"}
+HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                   "AppleWebKit/537.36 (KHTML, like Gecko) "
+                   "Chrome/124.0.0.0 Safari/537.36"),
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "it-IT,it;q=0.9",
+    "Referer": "http://www.viaggiatreno.it/infomobilita/",
+}
 TIMEOUT = 15
 
 ROOT = Path(__file__).resolve().parent
