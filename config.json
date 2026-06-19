@@ -1,5 +1,5 @@
 {
-  "soglia_ritardo_min": 0,
+  "soglia_ritardo_min": 5,
   "step_riavviso_min": 10,
   "finestra_minuti": 75,
   "tratte": [
