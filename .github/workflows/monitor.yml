@@ -1,0 +1,52 @@
+name: Monitor treni
+
+on:
+  schedule:
+    # cron e' in UTC. "*/10 5-19" UTC ≈ 07:00–21:00 ora italiana (estate, CEST).
+    # In inverno (CET) sarebbe 06:00–20:00. Regola la finestra se serve.
+    - cron: "*/10 5-19 * * *"
+  workflow_dispatch:   # permette l'avvio manuale dalla tab Actions
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monitor-treni
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      # Ripristina lo stato salvato dall'esecuzione precedente.
+      # La chiave include il run_id (sempre unica -> il save funziona sempre),
+      # mentre restore-keys fa match per prefisso e recupera l'ultima cache.
+      - name: Ripristina stato precedente
+        uses: actions/cache/restore@v4
+        with:
+          path: state.json
+          key: treni-state-${{ github.run_id }}
+          restore-keys: |
+            treni-state-
+
+      - name: Controlla treni
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python monitor.py
+
+      - name: Salva stato aggiornato
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state.json
+          key: treni-state-${{ github.run_id }}
