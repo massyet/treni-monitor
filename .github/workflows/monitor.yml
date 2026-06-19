@@ -18,9 +18,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -31,7 +31,7 @@ jobs:
       # La chiave include il run_id (sempre unica -> il save funziona sempre),
       # mentre restore-keys fa match per prefisso e recupera l'ultima cache.
       - name: Ripristina stato precedente
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: state.json
           key: treni-state-${{ github.run_id }}
@@ -46,7 +46,7 @@ jobs:
 
       - name: Salva stato aggiornato
         if: always()
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: state.json
           key: treni-state-${{ github.run_id }}
