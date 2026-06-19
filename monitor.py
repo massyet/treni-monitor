@@ -150,6 +150,21 @@ def html_escape(t):
     return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def estrai_binario(treno):
+    """Binario di partenza dalla stazione A. Ritorna (descrizione, confermato).
+    Preferisce il binario effettivo a quello programmato; segnala i cambi.
+    I campi sono spesso vuoti finche' il binario non viene assegnato."""
+    eff = (treno.get("binarioEffettivoPartenzaDescrizione") or "").strip()
+    prog = (treno.get("binarioProgrammatoPartenzaDescrizione") or "").strip()
+    if eff:
+        if prog and eff != prog:
+            return f"{eff} (cambiato dal {prog})", True
+        return eff, True
+    if prog:
+        return prog, False
+    return None, False
+
+
 def formatta(etichetta, treno, ritardo, soppresso):
     numero = treno.get("numeroTreno", "?")
     cat = (treno.get("categoria") or "REG")
@@ -161,7 +176,12 @@ def formatta(etichetta, treno, ritardo, soppresso):
         stato = "❌ <b>SOPPRESSO</b>"
     else:
         stato = f"🔴 Ritardo <b>+{ritardo} min</b>"
-    return f"{testa}\n{riga}\n{stato}"
+    righe = [testa, riga, stato]
+    bin_desc, confermato = estrai_binario(treno)
+    if bin_desc:
+        prefisso = "🛤 Binario" if confermato else "🛤 Binario previsto"
+        righe.append(f"{prefisso} {html_escape(bin_desc)}")
+    return "\n".join(righe)
 
 
 def invia_telegram(testo):
